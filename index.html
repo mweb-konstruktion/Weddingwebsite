@@ -118,7 +118,10 @@
        HERO & COUNTDOWN
        ========================================================== -->
   <header class="hero" id="hero">
-    <!-- IMAGE: Lege euer Heldenbild unter images/hero.jpg ab (mind. 1920x1080px empfohlen) -->
+    <!-- VIDEO-HINTERGRUND: Autoplaying, stummgeschaltet, Loop -->
+    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="MARRIAGE PROPOSAL 2.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-subtitle">
@@ -289,7 +292,7 @@
       <div class="locations-grid">
 
         <!-- Zeremonie -->
-        <div class="location-card">
+        <div class="location-card reveal">
           <div class="location-image">
             <img src="images/Die Kathedralevon_Trani.jpg" alt="Kathedrale von Traniale" loading="lazy">
           </div>
@@ -311,7 +314,7 @@
         </div>
 
         <!-- Empfang -->
-        <div class="location-card">
+        <div class="location-card reveal">
           <div class="location-image">
             <img src="images/Villa-Carafa-Apulia.jpg" alt="Villa Carafa — Empfangsort in Andria" loading="lazy">
           </div>
@@ -353,7 +356,7 @@
 
       <div class="timeline">
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">16:00</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -368,7 +371,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">16:30</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -383,7 +386,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">17:30</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -395,7 +398,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">19:30</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -410,7 +413,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">22:00</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -422,7 +425,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
           <div class="timeline-time">23:00</div>
           <div class="timeline-dot"></div>
           <div class="timeline-content">
@@ -454,7 +457,7 @@
       <div class="travel-grid">
 
         <!-- Flüge -->
-        <div class="travel-card">
+        <div class="travel-card reveal">
           <div class="travel-icon">&#9992;</div>
           <h3>
             <span class="lang-de">Flüge</span>
@@ -484,7 +487,7 @@
         </div>
 
         <!-- Hotels -->
-        <div class="travel-card">
+        <div class="travel-card reveal">
           <div class="travel-icon">&#127976;</div>
           <h3>
             <span class="lang-de">Übernachtung</span>
@@ -710,7 +713,7 @@
 
       <div class="story-timeline">
 
-        <div class="story-item">
+        <div class="story-item reveal">
           <div class="story-image">
             <!-- IMAGE: Euer Kennenlern-Foto unter images/story-1.jpg ablegen -->
             <img src="images/story-1.jpg" alt="Wie wir uns kennengelernt haben" loading="lazy">
@@ -736,7 +739,7 @@
           </div>
         </div>
 
-        <div class="story-item story-item--reverse">
+        <div class="story-item story-item--reverse reveal">
           <div class="story-image">
             <!-- IMAGE: Ein weiteres Foto unter images/story-2.jpg ablegen -->
             <img src="images/story-2.jpg" alt="Unser erstes Date" loading="lazy">
@@ -761,7 +764,7 @@
           </div>
         </div>
 
-        <div class="story-item">
+        <div class="story-item reveal">
           <div class="story-image">
             <!-- IMAGE: Verlobungsfoto unter images/story-3.jpg ablegen -->
             <img src="images/Antrag.png" alt="Der Antrag" loading="lazy">
@@ -807,32 +810,56 @@
 
       <div class="contact-grid">
 
-        <!-- TRAUZEUGE: Name und Kontaktdaten anpassen -->
-        <div class="contact-card">
+        <div class="contact-card reveal">
           <div class="contact-avatar">
-            <img src="images/trauzeuge.jpg" alt="Trauzeuge" loading="lazy">
+            <img src="images/trauzeuge-severin.jpg" alt="Severin" loading="lazy">
           </div>
-          <h3><!-- NAME -->Lukas Müller</h3>
+          <h3>Severin</h3>
           <p class="contact-role">
             <span class="lang-de">Trauzeuge</span>
             <span class="lang-it">Testimone dello Sposo</span>
           </p>
-          <p><a href="tel:+41791234567">+41 79 123 45 67</a></p>
-          <p><a href="mailto:lukas@beispiel.ch">lukas@beispiel.ch</a></p>
+          <p><a href="tel:+41799250144">+41 79 925 01 44</a></p>
+          <p><a href="mailto:severin@beispiel.ch">severin@beispiel.ch</a></p>
         </div>
 
-        <!-- TRAUZEUGIN: Name und Kontaktdaten anpassen -->
-        <div class="contact-card">
+        <div class="contact-card reveal">
           <div class="contact-avatar">
-            <img src="images/trauzeugin.jpg" alt="Trauzeugin" loading="lazy">
+            <img src="images/trauzeuge-daniel.jpg" alt="Daniel" loading="lazy">
           </div>
-          <h3><!-- NAME -->Sophie Fischer</h3>
+          <h3>Daniel</h3>
+          <p class="contact-role">
+            <span class="lang-de">Trauzeuge</span>
+            <span class="lang-it">Testimone dello Sposo</span>
+          </p>
+          <p><a href="tel:+41793706358">+41 79 370 63 58</a></p>
+          <p><a href="mailto:daniel@beispiel.ch">daniel@beispiel.ch</a></p>
+        </div>
+
+        <div class="contact-card reveal">
+          <div class="contact-avatar">
+            <img src="images/trauzeugin-cinzia.jpg" alt="Cinzia" loading="lazy">
+          </div>
+          <h3>Cinzia</h3>
           <p class="contact-role">
             <span class="lang-de">Trauzeugin</span>
             <span class="lang-it">Testimone della Sposa</span>
           </p>
-          <p><a href="tel:+41797654321">+41 79 765 43 21</a></p>
-          <p><a href="mailto:sophie@beispiel.ch">sophie@beispiel.ch</a></p>
+          <p><a href="tel:+41788717882">+41 78 871 78 82</a></p>
+          <p><a href="mailto:cinzia@beispiel.ch">cinzia@beispiel.ch</a></p>
+        </div>
+
+        <div class="contact-card reveal">
+          <div class="contact-avatar">
+            <img src="images/trauzeugin-anouk.jpg" alt="Anouk" loading="lazy">
+          </div>
+          <h3>Anouk</h3>
+          <p class="contact-role">
+            <span class="lang-de">Trauzeugin</span>
+            <span class="lang-it">Testimone della Sposa</span>
+          </p>
+          <p><a href="tel:+41762112781">+41 76 211 27 81</a></p>
+          <p><a href="mailto:anouk@beispiel.ch">anouk@beispiel.ch</a></p>
         </div>
 
       </div>
@@ -1040,6 +1067,38 @@
     window.addEventListener('scroll', () => {
       navbar.classList.toggle('scrolled', window.scrollY > 50);
     });
+
+
+    // ---- SCROLL-ANIMATIONEN (IntersectionObserver) ----
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // Gestaffelte Verzögerung für Geschwister-Elemente
+          const siblings = entry.target.parentElement.querySelectorAll('.reveal');
+          let delay = 0;
+          siblings.forEach((el, idx) => {
+            if (el === entry.target) delay = idx * 100;
+          });
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ---- SHIMMER auf Section-Titeln beim Einblenden ----
+    const shimmerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('shimmer-active');
+          shimmerObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.section-title').forEach(el => shimmerObserver.observe(el));
+
   </script>
 
 </body>

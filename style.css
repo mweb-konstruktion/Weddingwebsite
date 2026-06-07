@@ -30,6 +30,8 @@
   --font-body:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;
 
   --max-width: 1100px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 
@@ -198,11 +200,17 @@ a:hover {
   font-weight: 500;
   letter-spacing: 0.1em;
   color: var(--color-white);
-  transition: all 0.3s ease;
+  transition: border-color 200ms var(--ease-out), color 200ms var(--ease-out), transform 160ms var(--ease-out);
 }
 
-.lang-switcher-btn:hover {
-  border-color: rgba(255, 255, 255, 0.8);
+@media (hover: hover) and (pointer: fine) {
+  .lang-switcher-btn:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.lang-switcher-btn:active {
+  transform: scale(0.97);
 }
 
 .navbar.scrolled .lang-switcher-btn {
@@ -217,7 +225,7 @@ a:hover {
 .lang-chevron {
   width: 8px;
   height: auto;
-  transition: transform 0.3s ease;
+  transition: transform 200ms var(--ease-out);
 }
 
 /* Pfeil dreht sich beim Öffnen */
@@ -239,15 +247,35 @@ a:hover {
   padding: 0.4rem 0;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.25s ease;
+  transform: translateY(-8px) scale(0.97);
+  transform-origin: top right;
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out), visibility 200ms;
 }
 
 /* Dropdown sichtbar wenn offen */
 .lang-dropdown.lang-dropdown-open {
   opacity: 1;
   visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger: Items erscheinen kaskadierend */
+.lang-dropdown li {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+
+.lang-dropdown.lang-dropdown-open li:nth-child(1) {
+  opacity: 1;
   transform: translateY(0);
+  transition-delay: 60ms;
+}
+
+.lang-dropdown.lang-dropdown-open li:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 100ms;
 }
 
 .lang-option {
@@ -263,12 +291,18 @@ a:hover {
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--color-charcoal);
-  transition: background-color 0.2s ease;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 160ms var(--ease-out);
 }
 
-.lang-option:hover {
-  background-color: var(--color-bg-alt);
-  color: var(--color-gold);
+@media (hover: hover) and (pointer: fine) {
+  .lang-option:hover {
+    background-color: var(--color-bg-alt);
+    color: var(--color-gold);
+  }
+}
+
+.lang-option:active {
+  transform: scale(0.97);
 }
 
 .lang-option-label {
@@ -387,10 +421,22 @@ a:hover {
   color: var(--color-white);
 }
 
+/* Video-Hintergrund: deckt den gesamten Hero-Bereich ab */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
 /* Dunkles Overlay über dem Bild, damit der weisse Text lesbar bleibt */
 .hero-overlay {
   position: absolute;
-  inset: 0;                     /* Kurzform für top/right/bottom/left: 0 */
+  inset: 0;
+  z-index: 1;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.35),
@@ -399,8 +445,8 @@ a:hover {
 }
 
 .hero-content {
-  position: relative;           /* Hebt den Inhalt über das Overlay */
-  z-index: 1;
+  position: relative;
+  z-index: 2;
   padding: 2rem 1rem;
 }
 
@@ -998,14 +1044,20 @@ a:hover {
    KONTAKT
 
    LAYOUT: CSS Grid
-   - 1 Spalte auf Mobil, 2 Spalten ab 768px
+   - 1 Spalte auf Mobil, 2 Spalten ab 768px, 4 Spalten ab 1024px
    ========================================================== */
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .contact-card {
@@ -1106,11 +1158,10 @@ a:hover {
     font-size: 3.5rem;
   }
 
-  /* Location & Reise & Kontakt: 2 Spalten nebeneinander via Grid */
+  /* Location & Reise: 2 Spalten nebeneinander via Grid */
   .locations-grid,
-  .travel-grid,
-  .contact-grid {
-    grid-template-columns: 1fr 1fr;   /* Zwei gleichbreite Spalten */
+  .travel-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   /* Story: Bild und Text nebeneinander via Flexbox */
@@ -1192,4 +1243,135 @@ a:hover {
   .section {
     padding: 7rem 0;
   }
+
+  .contact-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1000px;
+  }
+}
+
+
+/* ==========================================================
+   ANIMATIONEN
+   ========================================================== */
+
+/* ---- Hero Einblendung ---- */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.6); }
+  50%       { box-shadow: 0 0 0 8px rgba(197, 165, 90, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.hero-subtitle {
+  animation: fadeInDown 0.8s ease both;
+  animation-delay: 0.2s;
+}
+
+.hero-title {
+  animation: fadeInUp 0.9s ease both;
+  animation-delay: 0.5s;
+}
+
+.hero-date {
+  animation: fadeIn 0.8s ease both;
+  animation-delay: 0.9s;
+}
+
+.countdown {
+  animation: fadeIn 0.8s ease both;
+  animation-delay: 1.2s;
+}
+
+/* Schwebende Herz-Icon im Geschenke-Bereich */
+.gifts-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulsende Timeline-Punkte */
+.timeline-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ---- Scroll-Animationen ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Karten mit leichtem Scale-Effekt */
+.location-card,
+.travel-card,
+.contact-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.location-card:hover,
+.travel-card:hover,
+.contact-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Gold-Shimmer auf Section-Titeln */
+.section-title {
+  background: linear-gradient(
+    90deg,
+    var(--color-charcoal) 0%,
+    var(--color-charcoal) 40%,
+    var(--color-gold) 50%,
+    var(--color-charcoal) 60%,
+    var(--color-charcoal) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title.shimmer-active {
+  animation: shimmer 1.8s linear forwards;
+}
+
+/* FAQ hover lift */
+.faq-item summary {
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.faq-item summary:hover {
+  padding-left: 0.5rem;
+}
+
+/* Countdown-Zahlen highlight beim Wechsel */
+.countdown-number.tick {
+  animation: fadeInUp 0.25s ease;
 }
