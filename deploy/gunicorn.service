@@ -1,0 +1,20 @@
+[Unit]
+Description=Genuine Analytics Gunicorn
+After=network.target
+
+[Service]
+User=USER
+Group=www-data
+WorkingDirectory=/home/USER/ga_website
+ExecStart=/home/USER/ga_website/venv/bin/gunicorn \
+    main.wsgi:application \
+    --bind 127.0.0.1:8000 \
+    --workers 3 \
+    --timeout 60 \
+    --access-logfile /var/log/gunicorn/ga_website_access.log \
+    --error-logfile /var/log/gunicorn/ga_website_error.log
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

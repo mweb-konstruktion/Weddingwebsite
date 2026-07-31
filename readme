@@ -1,0 +1,21 @@
+## Deployment
+
+### Einmaliges Server-Setup
+
+```bash
+bash deploy/setup_server.sh
+```
+
+Danach manuell auf dem Server:
+1. `gunicorn.service` installieren → `deploy/gunicorn.service`
+2. Nginx konfigurieren → `deploy/nginx.conf`
+
+### Deploy (nach jedem Update)
+
+```bash
+bash deploy.sh
+```
+
+Das Script überträgt alle Dateien per `scp` auf den Server, führt Migrationen durch, sammelt Static Files und startet Gunicorn neu.
+
+---

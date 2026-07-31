@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passwort erforderlich</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            background: #f5f0e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: #fff;
+            padding: 2.5rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 360px;
+            width: 100%;
+        }
+        h1 { font-size: 1.4rem; margin-bottom: 1.5rem; }
+        input[type="password"] {
+            width: 100%;
+            padding: 0.6rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 0.6rem;
+            background: #a68a64;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover { background: #8f7550; }
+        .error { color: #b00020; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Diese Seite ist passwortgeschützt</h1>
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="password" name="password" placeholder="Passwort" autofocus required>
+            <button type="submit">Ansehen</button>
+        </form>
+    </div>
+</body>
+</html>

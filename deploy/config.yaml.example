@@ -1,0 +1,5 @@
+SECRET_KEY: "dein-langer-zufaelliger-secret-key-hier"
+DEBUG: false
+ALLOWED_HOSTS:
+  - "deine-domain.ch"
+  - "www.deine-domain.ch"

@@ -1,0 +1,6 @@
+SECRET_KEY: ""
+SITE_PASSWORD: ""
+DEBUG: true
+ALLOWED_HOSTS:
+  - ""
+  - ""

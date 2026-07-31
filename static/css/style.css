@@ -1,0 +1,1377 @@
+/* ==========================================================
+   HOCHZEITSSEITE — style.css
+
+   FARBPALETTE:
+     Ivory (#FFFFF0), Soft Gold (#C5A55A), Charcoal (#333333)
+
+   SCHRIFTEN:
+     Cormorant Garamond (Überschriften) — elegant, dünn, luxuriös
+     Montserrat (Fliesstext) — modern, gut lesbar
+
+   ANSATZ:
+     Mobile-First — alle Basis-Styles sind für kleine Screens.
+     Grössere Bildschirme werden mit @media-Queries angepasst.
+   ========================================================== */
+
+
+/* ---- CSS VARIABLEN (Custom Properties) ----
+   Alle Farben und Schriften an einem Ort.
+   Ändert z.B. --color-gold und die ganze Seite passt sich an. */
+:root {
+  --color-ivory:          #FFFFF0;
+  --color-gold:           #C5A55A;
+  --color-gold-light:     #D4B96E;
+  --color-charcoal:       #333333;
+  --color-charcoal-light: #555555;
+  --color-white:          #FFFFFF;
+  --color-bg-alt:         #FAF8F5;   /* Leicht abgetönter Hintergrund für abwechselnde Sections */
+
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
+  --max-width: 1100px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+
+/* ==========================================================
+   SPRACHUMSCHALTUNG (Language Switcher)
+
+   So funktioniert es:
+   - Jeder Text hat zwei Versionen: <span class="lang-de"> und <span class="lang-it">
+   - data-lang="de" auf <html> → Deutsch sichtbar, Italiano versteckt
+   - data-lang="it" auf <html> → Italiano sichtbar, Deutsch versteckt
+   - Die Standardsprache ist Deutsch (data-lang="de")
+   ========================================================== */
+
+/* Standardmässig: Italiano-Texte verstecken */
+[data-lang="de"] .lang-it {
+  display: none !important;
+}
+
+/* Wenn Italiano aktiv: Deutsch verstecken, Italiano zeigen */
+[data-lang="it"] .lang-de {
+  display: none !important;
+}
+
+
+/* ---- RESET & GRUNDLAGEN ----
+   Setzt Browser-Standardabstände zurück und definiert Basis-Styles.
+   box-sizing: border-box → Padding und Border werden in die Breite eingerechnet. */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;   /* Sanftes Scrollen bei Anker-Links */
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-charcoal);
+  background-color: var(--color-ivory);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-charcoal);
+}
+
+
+/* ---- WIEDERVERWENDBARE KLASSEN ----
+   .container → Zentriert den Inhalt und begrenzt die Breite.
+   .section   → Einheitliches Padding für alle Abschnitte. */
+.container {
+  width: 90%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.section {
+  padding: 5rem 0;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-charcoal);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--color-charcoal-light);
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+
+/* ==========================================================
+   NAVIGATION
+
+   LAYOUT: Flexbox
+   - justify-content: space-between → Logo links, Links rechts
+   - position: fixed → Bleibt beim Scrollen oben
+   - Transparenter Hintergrund am Anfang, weiss beim Scrollen
+     (JS fügt die Klasse ".scrolled" hinzu)
+   ========================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;                      /* Flexbox-Container */
+  justify-content: space-between;     /* Logo links, Menü rechts */
+  align-items: center;                /* Vertikal zentriert */
+  padding: 1rem 5%;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+  background-color: rgba(255, 255, 240, 0.97);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.nav-brand a {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 0.1em;
+  transition: color 0.3s ease;
+}
+
+.navbar.scrolled .nav-brand a {
+  color: var(--color-charcoal);
+}
+
+/* ---- Rechte Seite der Navbar ----
+   Flexbox: Sprachumschalter und Hamburger nebeneinander. */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1001;
+}
+
+/* ---- Sprachumschalter (Language Dropdown) ----
+   Elegantes Dropdown, das sich per Klick öffnet.
+   Positionierung: relativ zum Button, absolut für das Dropdown. */
+.lang-switcher {
+  position: relative;
+}
+
+.lang-switcher-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-white);
+  transition: border-color 200ms var(--ease-out), color 200ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-switcher-btn:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.lang-switcher-btn:active {
+  transform: scale(0.97);
+}
+
+.navbar.scrolled .lang-switcher-btn {
+  color: var(--color-charcoal);
+  border-color: rgba(51, 51, 51, 0.3);
+}
+
+.navbar.scrolled .lang-switcher-btn:hover {
+  border-color: var(--color-gold);
+}
+
+.lang-chevron {
+  width: 8px;
+  height: auto;
+  transition: transform 200ms var(--ease-out);
+}
+
+/* Pfeil dreht sich beim Öffnen */
+.lang-dropdown-open ~ .lang-switcher-btn .lang-chevron,
+.lang-switcher-btn[aria-expanded="true"] .lang-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown-Liste — standardmässig versteckt */
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  list-style: none;
+  background-color: var(--color-white);
+  border-radius: 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  min-width: 140px;
+  padding: 0.4rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.97);
+  transform-origin: top right;
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out), visibility 200ms;
+}
+
+/* Dropdown sichtbar wenn offen */
+.lang-dropdown.lang-dropdown-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger: Items erscheinen kaskadierend */
+.lang-dropdown li {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+
+.lang-dropdown.lang-dropdown-open li:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 60ms;
+}
+
+.lang-dropdown.lang-dropdown-open li:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 100ms;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-charcoal);
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-option:hover {
+    background-color: var(--color-bg-alt);
+    color: var(--color-gold);
+  }
+}
+
+.lang-option:active {
+  transform: scale(0.97);
+}
+
+.lang-option-label {
+  letter-spacing: 0.03em;
+}
+
+
+/* ---- Hamburger-Button (nur auf Mobilgeräten sichtbar) ----
+   Drei horizontale Linien, die sich beim Klicken in ein X verwandeln.
+   Die Linien werden mit ::before und ::after Pseudo-Elementen erstellt. */
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 1001;
+}
+
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled .hamburger,
+.navbar.scrolled .hamburger::before,
+.navbar.scrolled .hamburger::after {
+  background-color: var(--color-charcoal);
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+}
+
+.hamburger::before { transform: translateY(-7px); }
+.hamburger::after  { transform: translateY(7px); }
+
+/* Animation: Hamburger wird zum X */
+.nav-toggle.active .hamburger { background-color: transparent; }
+.nav-toggle.active .hamburger::before {
+  transform: rotate(45deg);
+  background-color: var(--color-charcoal);
+}
+.nav-toggle.active .hamburger::after {
+  transform: rotate(-45deg);
+  background-color: var(--color-charcoal);
+}
+
+/* ---- Navigation Links ----
+   MOBILE: Vollbild-Overlay, von oben hereingleitend (transform).
+   DESKTOP: Horizontal nebeneinander via Flexbox (siehe @media unten). */
+.nav-links {
+  list-style: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(255, 255, 240, 0.98);
+  display: flex;
+  flex-direction: column;      /* Vertikal gestapelt auf Mobil */
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  transform: translateY(-100%);  /* Versteckt oberhalb des Bildschirms */
+  transition: transform 0.4s ease;
+}
+
+.nav-links.nav-open {
+  transform: translateY(0);     /* Gleitet herunter wenn geöffnet */
+}
+
+.nav-links a {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-charcoal);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.nav-links a:hover {
+  color: var(--color-gold);
+}
+
+
+/* ==========================================================
+   HERO SECTION
+
+   LAYOUT: Flexbox
+   - display: flex + align-items/justify-content: center
+     → Zentriert den Inhalt sowohl vertikal als auch horizontal
+   - min-height: 100vh → Nimmt die volle Bildschirmhöhe ein
+   - background: cover → Bild füllt den gesamten Bereich aus
+   ========================================================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  /* IMAGE: Euer Heldenbild — legt es als images/hero.jpg ab */
+  background: url('../images/hero.jpg') center center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-white);
+}
+
+/* Video-Hintergrund: deckt den gesamten Hero-Bereich ab */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* Dunkles Overlay über dem Bild, damit der weisse Text lesbar bleibt */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.55)
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1rem;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.hero-title span {
+  color: var(--color-gold-light);
+  font-style: italic;
+}
+
+.hero-date {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  margin-bottom: 2.5rem;
+}
+
+/* ---- Countdown ----
+   LAYOUT: Flexbox
+   - 4 Elemente nebeneinander (Tage, Stunden, Minuten, Sekunden)
+   - flex-wrap: wrap → Auf sehr kleinen Screens umbrechen */
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;       /* Zahl oben, Label darunter */
+  align-items: center;
+}
+
+.countdown-number {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 0.3rem;
+  font-weight: 400;
+}
+
+.countdown-message {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+
+/* ==========================================================
+   RSVP FORMULAR
+   Zentriertes Formular mit max-width: 600px.
+   ========================================================== */
+.rsvp-section {
+  background-color: var(--color-bg-alt);
+}
+
+.rsvp-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.rsvp-success {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--color-cream);
+  border: 1px solid var(--color-gold);
+  border-radius: 4px;
+}
+
+.rsvp-success-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rsvp-success-icon {
+  font-size: 2.5rem;
+  color: var(--color-gold);
+}
+
+.rsvp-success-sub {
+  color: var(--color-charcoal);
+  font-style: italic;
+}
+
+.rsvp-error {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+  padding: 1rem;
+  background-color: #fff0f0;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  color: #c0392b;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  color: var(--color-charcoal);
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 300;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: var(--color-white);
+  color: var(--color-charcoal);
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+/* ---- Custom Radio Buttons ----
+   Die nativen Radio-Buttons werden versteckt und durch
+   gestylte Kreise (.radio-custom) ersetzt. */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 300 !important;
+}
+
+.radio-label input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 0.8rem;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease;
+}
+
+/* Wenn ausgewählt: goldener Rand + goldener Punkt in der Mitte */
+.radio-label input[type="radio"]:checked + .radio-custom {
+  border-color: var(--color-gold);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-gold);
+  border-radius: 50%;
+}
+
+/* Bedingte Felder: standardmässig versteckt (JS blendet sie bei Zusage ein) */
+.conditional-fields {
+  display: none;
+}
+
+/* ---- Button ---- */
+.btn {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-gold);
+  color: var(--color-white);
+  width: 100%;                  /* Mobile: volle Breite */
+}
+
+.btn-primary:hover {
+  background-color: var(--color-charcoal);
+}
+
+
+/* ==========================================================
+   LOCATION
+
+   LAYOUT: CSS Grid
+   - grid-template-columns: 1fr → Mobile: 1 Spalte
+   - Ab 768px: 1fr 1fr → 2 gleichbreite Spalten (siehe @media)
+   ========================================================== */
+.locations-grid {
+  display: grid;
+  grid-template-columns: 1fr;    /* Mobile: eine Spalte */
+  gap: 2.5rem;
+}
+
+.location-card {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Ortsbild oben in der Karte — füllt die volle Breite, abgerundete obere Ecken */
+.location-image {
+  margin: -2rem -2rem 1.5rem -2rem;   /* Negatives Margin: Bild geht bis an den Kartenrand */
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.location-image img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;                    /* Bild füllt den Bereich, ohne verzerrt zu werden */
+}
+
+.location-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.location-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.location-name {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.location-address {
+  font-size: 0.9rem;
+  color: var(--color-charcoal-light);
+  margin-bottom: 1.5rem;
+}
+
+.map-container {
+  border-radius: 6px;
+  overflow: hidden;
+  line-height: 0;              /* Entfernt Lücke unter dem iframe */
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 250px;
+}
+
+
+/* ==========================================================
+   TAGESABLAUF — Vertikale Timeline
+
+   LAYOUT: Relative Positionierung
+   - .timeline hat eine vertikale Linie (::before Pseudo-Element)
+   - .timeline-dot ist der goldene Punkt auf der Linie
+   - .timeline-item wird mit padding-left eingerückt
+   ========================================================== */
+.timeline-section {
+  background-color: var(--color-bg-alt);
+}
+
+.timeline {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-left: 2.5rem;        /* Platz für die Linie links */
+}
+
+/* Vertikale goldene Linie */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--color-gold);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 1rem;
+}
+
+/* Goldener Punkt auf der Linie */
+.timeline-dot {
+  position: absolute;
+  left: -2.15rem;
+  top: 0.3rem;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-gold);
+  border-radius: 50%;
+  border: 2px solid var(--color-bg-alt);
+}
+
+.timeline-time {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin-bottom: 0.2rem;
+}
+
+.timeline-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-content p {
+  font-size: 0.95rem;
+  color: var(--color-charcoal-light);
+}
+
+
+/* ==========================================================
+   REISE & UNTERKUNFT
+
+   LAYOUT: CSS Grid (gleich wie Location)
+   - 1 Spalte auf Mobil, 2 Spalten ab 768px
+   ========================================================== */
+.travel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+.travel-card {
+  padding: 2rem;
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.travel-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.travel-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.travel-card p {
+  margin-bottom: 0.8rem;
+}
+
+.hotel-list {
+  list-style: none;
+  padding: 0;
+}
+
+.hotel-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.hotel-list li:last-child {
+  border-bottom: none;
+}
+
+.hotel-list a {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+
+/* ==========================================================
+   GESCHENKE
+   Zentrierter, eleganter Block mit max-width.
+   ========================================================== */
+.gifts-section {
+  background-color: var(--color-bg-alt);
+}
+
+.gifts-content {
+  max-width: 650px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gifts-icon {
+  font-size: 2.5rem;
+  color: var(--color-gold);
+  margin-bottom: 1.5rem;
+}
+
+.gifts-text {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.gifts-note {
+  font-size: 0.9rem;
+  color: var(--color-charcoal-light);
+  font-style: italic;
+  margin-top: 1.5rem;
+}
+
+
+/* ==========================================================
+   FAQ — Akkordeon
+
+   Nutzt das native HTML <details>/<summary> Element.
+   Kein JavaScript nötig — der Browser macht das Auf-/Zuklappen.
+   Das Standard-Dreieck wird entfernt und durch +/− ersetzt.
+   ========================================================== */
+.faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-item summary {
+  padding: 1.2rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;              /* Entfernt das Standard-Dreieck */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+/* Eigenes Plus/Minus-Zeichen rechts */
+.faq-item summary::after {
+  content: '+';
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--color-gold);
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.faq-item[open] summary::after {
+  content: '\2212';               /* Minuszeichen (−) */
+}
+
+/* Entfernt das Standard-Dreieck in Chrome/Safari */
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary:hover {
+  color: var(--color-gold);
+}
+
+.faq-answer {
+  padding: 0 0 1.5rem;
+  color: var(--color-charcoal-light);
+  line-height: 1.8;
+}
+
+
+/* ==========================================================
+   UNSERE GESCHICHTE
+
+   LAYOUT: Flexbox
+   - flex-direction: column → Mobile: Bild oben, Text darunter
+   - Ab 768px: flex-direction: row → Nebeneinander
+   - .story-item--reverse: flex-direction: row-reverse
+     → Wechselt die Reihenfolge (Bild rechts statt links)
+   ========================================================== */
+.story-section {
+  background-color: var(--color-bg-alt);
+}
+
+.story-timeline {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.story-item {
+  display: flex;
+  flex-direction: column;        /* Mobile: untereinander */
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.story-item:last-child {
+  margin-bottom: 0;
+}
+
+.story-image {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.story-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;             /* Bild füllt den Container, behält Proportionen */
+}
+
+.story-text h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.story-date-label {
+  font-size: 0.85rem;
+  color: var(--color-gold);
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+}
+
+.story-text p {
+  color: var(--color-charcoal-light);
+  line-height: 1.8;
+}
+
+
+/* ==========================================================
+   KONTAKT
+
+   LAYOUT: CSS Grid
+   - 1 Spalte auf Mobil, 2 Spalten ab 768px, 4 Spalten ab 1024px
+   ========================================================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background-color: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.contact-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 1.2rem;
+  border: 3px solid var(--color-gold);
+}
+
+.contact-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.contact-role {
+  font-size: 0.85rem;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.contact-card a {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+.footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: var(--color-charcoal);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.footer p:first-child {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-white);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.1em;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+
+/* ==========================================================
+   RESPONSIVE DESIGN — Media Queries
+
+   Mobile-First Strategie:
+   Alle obigen Styles gelten für KLEINE Screens (< 768px).
+   Hier definieren wir, was sich auf GRÖSSEREN Screens ändert.
+   ========================================================== */
+
+/* ---- TABLET (ab 768px) ---- */
+@media (min-width: 768px) {
+
+  .section-title {
+    font-size: 3rem;
+  }
+
+  .hero-title {
+    font-size: 5rem;
+  }
+
+  .hero-date {
+    font-size: 1.2rem;
+  }
+
+  .countdown-number {
+    font-size: 3.5rem;
+  }
+
+  /* Location & Reise: 2 Spalten nebeneinander via Grid */
+  .locations-grid,
+  .travel-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Story: Bild und Text nebeneinander via Flexbox */
+  .story-item {
+    flex-direction: row;              /* Nebeneinander */
+    align-items: center;
+  }
+
+  .story-image,
+  .story-text {
+    flex: 1;                          /* Jede Hälfte bekommt 50% Breite */
+  }
+
+  /* Wechselnde Reihenfolge: Bild rechts, Text links */
+  .story-item--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .story-image img {
+    height: 350px;
+  }
+
+  /* RSVP Radio-Buttons nebeneinander */
+  .radio-group {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  /* Button nicht mehr volle Breite */
+  .btn-primary {
+    width: auto;
+  }
+}
+
+
+/* ---- DESKTOP (ab 1024px) ---- */
+@media (min-width: 1024px) {
+
+  /* Navigation: Hamburger verstecken, Links horizontal anzeigen */
+  .nav-toggle {
+    display: none;
+  }
+
+  /* Auf Desktop: Navbar wird 3-teilig via order:
+     Logo (order:1) | Nav-Links (order:2) | Sprache+Hamburger (order:3) */
+  .nav-links {
+    position: static;
+    height: auto;
+    width: auto;
+    background: none;
+    flex-direction: row;
+    transform: none;
+    gap: 1.5rem;
+    order: 2;                     /* Links in der Mitte */
+  }
+
+  .nav-right {
+    order: 3;                     /* Sprachumschalter rechts */
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+    color: var(--color-white);
+    letter-spacing: 0.1em;
+  }
+
+  .navbar.scrolled .nav-links a {
+    color: var(--color-charcoal);
+  }
+
+  .nav-links a:hover {
+    color: var(--color-gold);
+  }
+
+  .hero-title {
+    font-size: 6rem;
+  }
+
+  .section {
+    padding: 7rem 0;
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1000px;
+  }
+}
+
+
+/* ==========================================================
+   ANIMATIONEN
+   ========================================================== */
+
+/* ---- Hero Einblendung ---- */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.6); }
+  50%       { box-shadow: 0 0 0 8px rgba(197, 165, 90, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.hero-subtitle {
+  animation: fadeInDown 0.8s ease both;
+  animation-delay: 0.2s;
+}
+
+.hero-title {
+  animation: fadeInUp 0.9s ease both;
+  animation-delay: 0.5s;
+}
+
+.hero-date {
+  animation: fadeIn 0.8s ease both;
+  animation-delay: 0.9s;
+}
+
+.countdown {
+  animation: fadeIn 0.8s ease both;
+  animation-delay: 1.2s;
+}
+
+/* Schwebende Herz-Icon im Geschenke-Bereich */
+.gifts-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulsende Timeline-Punkte */
+.timeline-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ---- Scroll-Animationen ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Karten mit leichtem Scale-Effekt */
+.location-card,
+.travel-card,
+.contact-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.location-card:hover,
+.travel-card:hover,
+.contact-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Gold-Shimmer auf Section-Titeln */
+.section-title {
+  background: linear-gradient(
+    90deg,
+    var(--color-charcoal) 0%,
+    var(--color-charcoal) 40%,
+    var(--color-gold) 50%,
+    var(--color-charcoal) 60%,
+    var(--color-charcoal) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title.shimmer-active {
+  animation: shimmer 1.8s linear forwards;
+}
+
+/* FAQ hover lift */
+.faq-item summary {
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.faq-item summary:hover {
+  padding-left: 0.5rem;
+}
+
+/* Countdown-Zahlen highlight beim Wechsel */
+.countdown-number.tick {
+  animation: fadeInUp 0.25s ease;
+}
