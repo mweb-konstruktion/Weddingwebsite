@@ -2,8 +2,8 @@
 # Einmaliges Server-Setup. Ausfuehren: bash deploy/setup_server.sh
 set -e
 
-REMOTE="USER@SERVER"
-REMOTE_DIR="/home/USER/ga_website"
+REMOTE="ubuntu@179.237.111.178"
+REMOTE_DIR="/home/ubuntu/wedding_page"
 
 echo "==> Verzeichnis anlegen..."
 ssh "$REMOTE" "mkdir -p $REMOTE_DIR"
@@ -24,6 +24,7 @@ rsync -avz --delete \
   --exclude='db.sqlite3' \
   --exclude='media/' \
   --exclude='static/CACHE/' \
+  --exclude='staticfiles/' \
   --exclude='node_modules/' \
   ./ "$REMOTE:$REMOTE_DIR/"
 
@@ -53,9 +54,9 @@ echo "     sudo nano /etc/systemd/system/gunicorn.service"
 echo "     sudo systemctl daemon-reload && sudo systemctl enable --now gunicorn"
 echo ""
 echo "  2. Nginx konfigurieren (USER + Domain ersetzen):"
-echo "     sudo cp $REMOTE_DIR/deploy/nginx.conf /etc/nginx/sites-available/ga_website"
-echo "     sudo nano /etc/nginx/sites-available/ga_website"
-echo "     sudo ln -s /etc/nginx/sites-available/ga_website /etc/nginx/sites-enabled/"
+echo "     sudo cp $REMOTE_DIR/deploy/nginx.conf /etc/nginx/sites-available/wedding_page"
+echo "     sudo nano /etc/nginx/sites-available/wedding_page"
+echo "     sudo ln -s /etc/nginx/sites-available/wedding_page /etc/nginx/sites-enabled/"
 echo "     sudo nginx -t && sudo systemctl reload nginx"
 echo ""
 echo "==> Setup abgeschlossen."

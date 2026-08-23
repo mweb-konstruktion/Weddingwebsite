@@ -2,11 +2,11 @@
 # Deploy via scp. Ausfuehren: bash deploy.sh
 set -e
 
-REMOTE="ubuntu@83.228.210.6"
-REMOTE_DIR="/home/ubuntu/website"
+REMOTE="ubuntu@179.237.111.178"
+REMOTE_DIR="/home/ubuntu/wedding_page"
 
 echo "==> Temporaeres Archiv erstellen..."
-tar --exclude='.git' \
+COPYFILE_DISABLE=1 tar --exclude='.git' \
     --exclude='venv' \
     --exclude='__pycache__' \
     --exclude='*.pyc' \
@@ -23,7 +23,6 @@ tar --exclude='.git' \
     --exclude='.vscode' \
     --exclude='secret.py' \
     --exclude='readme.md' \
-    --exclude='migrations' \
     -czf /tmp/ga_deploy.tar.gz .
 
 echo "==> Archiv auf Server kopieren..."
@@ -40,7 +39,6 @@ ssh "$REMOTE" "
   cd $REMOTE_DIR
   source venv/bin/activate
   pip install -r requirements.txt --quiet
-  python manage.py makemigrations --no-input
   python manage.py migrate --no-input
   python manage.py collectstatic --no-input
   sudo systemctl restart gunicorn

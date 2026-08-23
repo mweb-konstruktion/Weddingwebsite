@@ -1,0 +1,7 @@
+/* Verbreitert Text-Eingabefelder (CharField, SlugField, EmailField, URLField)
+   im Django-Admin. Bewusst nur die Breite, nicht die Höhe. */
+.vTextField,
+.vURLField {
+  width: 100%;
+  max-width: 720px;
+}

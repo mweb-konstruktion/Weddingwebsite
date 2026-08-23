@@ -21,6 +21,7 @@
   --color-ivory:          #FFFFF0;
   --color-gold:           #C5A55A;
   --color-gold-light:     #D4B96E;
+  --color-gold-dark:      #8A6D2F;   /* Kontraststarke Gold-Variante fuer helle Hintergruende (Nav-Hover) */
   --color-charcoal:       #333333;
   --color-charcoal-light: #555555;
   --color-white:          #FFFFFF;
@@ -177,6 +178,35 @@ a:hover {
   align-items: center;
   gap: 1rem;
   z-index: 1001;
+}
+
+/* ---- Anmeldung (CTA-Button in der Navbar) ----
+   Bewusst als Button gestaltet (gefüllt, Gold), nicht wie ein normaler
+   Nav-Link, damit er auf jedem Screen sofort als Handlungsaufforderung
+   erkennbar ist. */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-gold);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 1.2rem;
+  border-radius: 4px;
+  transition: background-color 200ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-cta:hover {
+    background-color: var(--color-gold-dark);
+  }
+}
+
+.nav-cta:active {
+  transform: scale(0.96);
 }
 
 /* ---- Sprachumschalter (Language Dropdown) ----
@@ -388,15 +418,36 @@ a:hover {
 }
 
 .nav-links a {
+  position: relative;
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--color-charcoal);
   letter-spacing: 0.08em;
   font-weight: 600;
+  padding-bottom: 0.25rem;
+  transition: color 200ms var(--ease-out);
 }
 
-.nav-links a:hover {
-  color: var(--color-gold);
+/* Unterstrich, der beim Hover/Active von links nach rechts einblendet */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-gold-dark);
+  transition: width 200ms var(--ease-out);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--color-gold-dark);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
 }
 
 
@@ -415,7 +466,7 @@ a:hover {
   /* IMAGE: Euer Heldenbild — legt es als images/hero.jpg ab */
   background: url('../images/hero.jpg') center center / cover no-repeat;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   text-align: center;
   color: var(--color-white);
@@ -447,7 +498,7 @@ a:hover {
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 4rem;
 }
 
 .hero-subtitle {
@@ -528,6 +579,28 @@ a:hover {
   background-color: var(--color-bg-alt);
 }
 
+/* Eigenstaendige Anmeldeseite (kein Hero davor, Navbar direkt "scrolled"
+   damit die Navbar-Farbe zum hellen Hintergrund passt) */
+.rsvp-standalone {
+  min-height: 100vh;
+  padding-top: 8rem;
+}
+
+.rsvp-back {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.rsvp-back a {
+  color: var(--color-charcoal-light);
+  font-size: 0.9rem;
+  transition: color 200ms var(--ease-out);
+}
+
+.rsvp-back a:hover {
+  color: var(--color-gold-dark);
+}
+
 .rsvp-form {
   max-width: 600px;
   margin: 0 auto;
@@ -556,11 +629,6 @@ a:hover {
   color: var(--color-gold);
 }
 
-.rsvp-success-sub {
-  color: var(--color-charcoal);
-  font-style: italic;
-}
-
 .rsvp-error {
   display: none;
   max-width: 600px;
@@ -587,7 +655,13 @@ a:hover {
   color: var(--color-charcoal);
 }
 
+.required-star {
+  color: #c0392b;
+  margin-left: 0.2rem;
+}
+
 .form-group input[type="text"],
+.form-group input[type="email"],
 .form-group select,
 .form-group textarea {
   width: 100%;
@@ -607,6 +681,17 @@ a:hover {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--color-gold);
+}
+
+/* Nativer Browser-Pfeil ersetzt durch einen goldenen Chevron, passend
+   zum Sprachumschalter-Dropdown in der Navbar. */
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23C5A55A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
 }
 
 /* ---- Custom Radio Buttons ----
@@ -663,6 +748,29 @@ a:hover {
 /* Bedingte Felder: standardmässig versteckt (JS blendet sie bei Zusage ein) */
 .conditional-fields {
   display: none;
+}
+
+/* Pro-Gast Felder: werden per JS anhand der gewaehlten Anzahl ein-/ausgeblendet */
+.guest-block {
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: var(--color-white);
+}
+
+.guest-block-title {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+  margin-bottom: 1rem;
+}
+
+.guest-block .form-group:last-child {
+  margin-bottom: 0;
 }
 
 /* ---- Button ---- */
@@ -736,6 +844,12 @@ a:hover {
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.location-description {
+  font-size: 0.95rem;
+  color: var(--color-charcoal-light);
+  margin-bottom: 0.8rem;
 }
 
 .location-name {
@@ -908,15 +1022,7 @@ a:hover {
 
 .gifts-text {
   font-size: 1.05rem;
-  margin-bottom: 1rem;
   line-height: 1.8;
-}
-
-.gifts-note {
-  font-size: 0.9rem;
-  color: var(--color-charcoal-light);
-  font-style: italic;
-  margin-top: 1.5rem;
 }
 
 
@@ -1024,14 +1130,39 @@ a:hover {
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.8rem;
 }
 
+/* Eyebrow: kleines, vorangestelltes Datum oberhalb des Titels —
+   mit auslaufender Gold-Linie und Raute als dekorativer Akzent,
+   damit es nicht wie eine reine Beschriftung wirkt. */
 .story-date-label {
-  font-size: 0.85rem;
-  color: var(--color-gold);
-  font-weight: 500;
-  margin-bottom: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  margin-bottom: 0.6rem;
+}
+
+.story-date-label::before {
+  content: '';
+  width: 2.25rem;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-gold));
+  flex-shrink: 0;
+}
+
+.story-date-label::after {
+  content: '';
+  width: 2.25rem;
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--color-gold));
+  flex-shrink: 0;
 }
 
 .story-text p {
@@ -1125,6 +1256,25 @@ a:hover {
   letter-spacing: 0.1em;
 }
 
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 1.2rem 0;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: color 200ms var(--ease-out);
+}
+
+.footer-links a:hover {
+  color: var(--color-gold-light);
+}
+
 .footer-note {
   font-size: 0.8rem;
   font-style: italic;
@@ -1205,17 +1355,20 @@ a:hover {
     display: none;
   }
 
-  /* Auf Desktop: Navbar wird 3-teilig via order:
-     Logo (order:1) | Nav-Links (order:2) | Sprache+Hamburger (order:3) */
+  /* Auf Desktop: Logo links, Sprache+Hamburger rechts (via Flexbox
+     space-between). Die Nav-Links werden absolut zentriert — so bleiben
+     sie mittig auf der Seite, unabhängig davon, wie breit Logo bzw.
+     Anmeldung-Button + Sprachumschalter sind. */
   .nav-links {
-    position: static;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     height: auto;
     width: auto;
     background: none;
     flex-direction: row;
-    transform: none;
     gap: 1.5rem;
-    order: 2;                     /* Links in der Mitte */
   }
 
   .nav-right {
@@ -1223,17 +1376,35 @@ a:hover {
   }
 
   .nav-links a {
-    font-size: 0.8rem;
+    font-size: 1.15rem;
     color: var(--color-white);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
+    padding-bottom: 0.3rem;
   }
 
   .navbar.scrolled .nav-links a {
     color: var(--color-charcoal);
   }
 
-  .nav-links a:hover {
-    color: var(--color-gold);
+  /* Auf dem transparenten Navbar (über dem dunklen Hero-Bild) sorgt das
+     hellere Gold für genug Kontrast; sobald der Navbar einen hellen
+     Hintergrund hat (.scrolled), wechseln wir auf die dunklere Variante. */
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--color-gold-light);
+  }
+
+  .nav-links a::after {
+    background-color: var(--color-gold-light);
+  }
+
+  .navbar.scrolled .nav-links a:hover,
+  .navbar.scrolled .nav-links a.active {
+    color: var(--color-gold-dark);
+  }
+
+  .navbar.scrolled .nav-links a::after {
+    background-color: var(--color-gold-dark);
   }
 
   .hero-title {

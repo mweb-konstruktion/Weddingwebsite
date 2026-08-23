@@ -1,5 +1,5 @@
-SECRET_KEY: "dein-langer-zufaelliger-secret-key-hier"
+SECRET_KEY: "d$^ll$%52o8s%x82yn7d)z!^4o44(nt9uda!_z!yu7&kop_-e7$"
 DEBUG: false
 ALLOWED_HOSTS:
-  - "deine-domain.ch"
-  - "www.deine-domain.ch"
+  - "viviana-marvin.ch"
+  - "www.viviana-marvin.ch"

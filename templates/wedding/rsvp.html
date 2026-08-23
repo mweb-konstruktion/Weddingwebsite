@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de-CH" data-lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anmeldung | Viviana &amp; Marvin</title>
+  <meta name="description" content="RSVP und Anmeldung zur Hochzeit von Viviana & Marvin">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+{% include 'header.html' %}
+
+  <main>
+    <section class="section rsvp-section rsvp-standalone" id="rsvp">
+      <div class="container">
+        <h1 class="section-title">
+          <span class="lang-de">Anmeldung</span>
+          <span class="lang-it">Iscrizione</span>
+        </h1>
+        <p class="section-subtitle">
+          <span class="lang-de">Bitte teilt uns bis zum 15. Mai 2027 mit, ob ihr dabei seid. Wir freuen uns auf euch.</span>
+          <span class="lang-it">Vi preghiamo di confermare entro il 15 maggio 2027. Non vediamo l'ora di festeggiare con voi.</span>
+        </p>
+
+        {% if submitted %}
+        <div class="rsvp-success" style="display:block;">
+          <div class="rsvp-success-inner">
+            <span class="rsvp-success-icon">&#10003;</span>
+            <div class="lang-de">{{ texts.rsvp_success_message.de|safe }}</div>
+            <div class="lang-it">{{ texts.rsvp_success_message.it|safe }}</div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="rsvp-error" style="display:block;">
+          {% for err in form.non_field_errors %}
+            <p>{{ err }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not submitted %}
+        <form class="rsvp-form" id="rsvp-form" method="post" novalidate>
+          {% csrf_token %}
+          <div class="form-group">
+              <label for="{{ form.name.id_for_label }}">{{ form.name.label }}{% if form.name.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              {{ form.name }}
+            {% if form.name.errors %}
+              <span class="field-error" style="display:block;">{{ form.name.errors|join:', ' }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+              <label for="{{ form.email.id_for_label }}">{{ form.email.label }}{% if form.email.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              {{ form.email }}
+            {% if form.email.errors %}
+              <span class="field-error" style="display:block;">{{ form.email.errors|join:', ' }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+              <label for="{{ form.no_of_guests.id_for_label }}">{{ form.no_of_guests.label }}{% if form.no_of_guests.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              {{ form.no_of_guests }}
+            {% if form.no_of_guests.errors %}
+              <span class="field-error" style="display:block;">{{ form.no_of_guests.errors|join:', ' }}</span>
+            {% endif %}
+          </div>
+
+          <div id="guest-fields">
+            {% for guest in form.guest_rows %}
+            <div class="guest-block" data-guest-index="{{ guest.index }}">
+              <h3 class="guest-block-title">Gast {{ guest.index }}</h3>
+
+              <div class="form-group">
+                <label for="{{ guest.name.id_for_label }}">{{ guest.name.label }}</label>
+                {{ guest.name }}
+                {% if guest.name.errors %}
+                  <span class="field-error" style="display:block;">{{ guest.name.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ guest.meal.id_for_label }}">{{ guest.meal.label }}</label>
+                {{ guest.meal }}
+                {% if guest.meal.errors %}
+                  <span class="field-error" style="display:block;">{{ guest.meal.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ guest.allergies.id_for_label }}">{{ guest.allergies.label }}</label>
+                {{ guest.allergies }}
+                {% if guest.allergies.errors %}
+                  <span class="field-error" style="display:block;">{{ guest.allergies.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="form-group">
+              <label for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+              {{ form.message }}
+            {% if form.message.errors %}
+              <span class="field-error" style="display:block;">{{ form.message.errors|join:', ' }}</span>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span class="lang-de">Antwort senden</span>
+            <span class="lang-it">Invia risposta</span>
+          </button>
+        </form>
+        {% endif %}
+
+        <p class="rsvp-back">
+          <a href="{% url 'home' %}">
+            <span class="lang-de">&larr; Zur&uuml;ck zur Startseite</span>
+            <span class="lang-it">&larr; Torna alla home</span>
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Viviana &amp; Marvin &middot; 15. Juli 2027</p>
+    <nav class="footer-links">
+      <a href="{% url 'home' %}#faq">FAQ</a>
+      <a href="{% url 'home' %}#kontakt">
+        <span class="lang-de">Kontakt</span>
+        <span class="lang-it">Contatti</span>
+      </a>
+    </nav>
+    <p class="footer-note">
+      <span class="lang-de">{{ texts.footer_note.de }}</span>
+      <span class="lang-it">{{ texts.footer_note.it }}</span>
+    </p>
+  </footer>
+
+  <script src="{% static 'js/nav.js' %}"></script>
+  <script>
+    // ---- GAST-FELDER: passend zur gewählten Anzahl ein-/ausblenden ----
+    (function () {
+      var guestCountSelect = document.getElementById('id_no_of_guests');
+      var guestBlocks = document.querySelectorAll('#guest-fields .guest-block');
+
+      function clearGuestBlock(block) {
+        block.querySelectorAll('input, select, textarea').forEach(function (field) {
+          field.value = '';
+        });
+      }
+
+      function updateGuestFields() {
+        var count = parseInt(guestCountSelect.value, 10) || 0;
+
+        guestBlocks.forEach(function (block) {
+          var index = parseInt(block.dataset.guestIndex, 10);
+          if (index <= count) {
+            block.style.display = '';
+          } else {
+            block.style.display = 'none';
+            clearGuestBlock(block);
+          }
+        });
+      }
+
+      if (guestCountSelect && guestBlocks.length) {
+        guestCountSelect.addEventListener('change', updateGuestFields);
+        updateGuestFields();
+      }
+    })();
+
+    // ---- NAME DER ANMELDENDEN PERSON: automatisch als Gast-1-Name uebernehmen ----
+    // Sobald der Gast das Gast-1-Feld selbst bearbeitet, wird die
+    // automatische Uebernahme fuer dieses Feld gestoppt.
+    (function () {
+      var nameField = document.getElementById('id_name');
+      var guest1NameField = document.getElementById('id_guest_name_1');
+
+      if (!nameField || !guest1NameField) return;
+
+      var manuallyEdited = false;
+
+      guest1NameField.addEventListener('input', function () {
+        manuallyEdited = true;
+      });
+
+      nameField.addEventListener('input', function () {
+        if (!manuallyEdited) {
+          guest1NameField.value = nameField.value;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

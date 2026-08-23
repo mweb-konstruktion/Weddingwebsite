@@ -1,0 +1,93 @@
+
+  <!-- ==========================================================
+       NAVIGATION
+       Flexbox: Logo links | Sprachumschalter + Hamburger rechts.
+       Auf Desktop: Logo links | Nav-Links Mitte | Sprachumschalter rechts.
+       ========================================================== -->
+  {% comment %}
+    Auf der Startseite ist die Navbar zunaechst transparent (ueber dem
+    Hero-Bild) und wird beim Scrollen hell (siehe nav.js). Alle anderen
+    Seiten haben kein Hero-Bild, daher ist die Navbar dort von Anfang an
+    im "scrolled"-Stil, damit der Text lesbar bleibt.
+  {% endcomment %}
+  {% if request.resolver_match.url_name == 'home' %}
+  <nav class="navbar" id="navbar">
+  {% else %}
+  <nav class="navbar scrolled" id="navbar" data-static-navbar="true">
+  {% endif %}
+    <div class="nav-brand">
+      <a href="{% url 'home' %}#hero">V &amp; M</a>
+    </div>
+
+    <!-- Rechte Seite der Navbar: Anmeldung-Button + Sprachumschalter + Hamburger -->
+    <div class="nav-right">
+
+      <!-- ---- ANMELDUNG (CTA-Button, kein normaler Menüpunkt) ---- -->
+      <a href="{% url 'rsvp' %}" class="nav-cta">
+        <span class="lang-de">Anmeldung</span>
+        <span class="lang-it">Iscrizione</span>
+      </a>
+
+      <!-- ---- SPRACHUMSCHALTER (Language Dropdown) ----
+           Ein elegantes Dropdown, das zwischen DE und IT wechselt.
+           Das Dropdown öffnet sich per CSS (:hover / :focus-within). -->
+      <div class="lang-switcher">
+        <button class="lang-switcher-btn" aria-label="Sprache wählen" aria-expanded="false">
+          <span class="lang-flag" id="current-lang-label">DE</span>
+          <svg class="lang-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none">
+            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <ul class="lang-dropdown" role="listbox">
+          <li role="option">
+            <button class="lang-option" data-lang="de" aria-label="Deutsch">
+              <span class="lang-option-label">Deutsch</span>
+            </button>
+          </li>
+          <li role="option">
+            <button class="lang-option" data-lang="it" aria-label="Italiano">
+              <span class="lang-option-label">Italiano</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Hamburger-Button für Mobilgeräte -->
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span class="hamburger"></span>
+      </button>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'home' %}#geschichte">
+          <span class="lang-de">Unsere Geschichte</span>
+          <span class="lang-it">La Nostra Storia</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home' %}#location">
+          <span class="lang-de">Orte</span>
+          <span class="lang-it">Luoghi</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home' %}#tagesablauf">
+          <span class="lang-de">Tagesablauf</span>
+          <span class="lang-it">Programma</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home' %}#reise">
+          <span class="lang-de">Anreise</span>
+          <span class="lang-it">Viaggio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home' %}#geschenke">
+          <span class="lang-de">Geschenke</span>
+          <span class="lang-it">Regali</span>
+        </a>
+      </li>
+    </ul>
+  </nav>

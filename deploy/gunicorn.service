@@ -3,16 +3,16 @@ Description=Genuine Analytics Gunicorn
 After=network.target
 
 [Service]
-User=USER
+User=ubuntu
 Group=www-data
-WorkingDirectory=/home/USER/ga_website
-ExecStart=/home/USER/ga_website/venv/bin/gunicorn \
-    main.wsgi:application \
+WorkingDirectory=/home/ubuntu/wedding_page
+ExecStart=/home/ubuntu/wedding_page/venv/bin/gunicorn \
+    weddingsite.wsgi:application \
     --bind 127.0.0.1:8000 \
     --workers 3 \
     --timeout 60 \
-    --access-logfile /var/log/gunicorn/ga_website_access.log \
-    --error-logfile /var/log/gunicorn/ga_website_error.log
+    --access-logfile /var/log/gunicorn/wedding_page_access.log \
+    --error-logfile /var/log/gunicorn/wedding_page_error.log
 Restart=on-failure
 RestartSec=5
 

@@ -13,34 +13,82 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+import yaml
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Shared password required to view the site (set SITE_PASSWORD env var in production)
-SITE_PASSWORD = os.environ.get('SITE_PASSWORD', 'changeme')
+
+def _load_yaml_config() -> dict:
+    config_path = BASE_DIR / 'config.yaml'
+    if not config_path.exists():
+        return {}
+
+    with config_path.open('r', encoding='utf-8') as fh:
+        data = yaml.safe_load(fh) or {}
+
+    if not isinstance(data, dict):
+        raise ImproperlyConfigured('config.yaml must contain a mapping at the root level.')
+
+    return data
+
+
+def _as_bool(value, default=False):
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+    return bool(value)
+
+
+def _as_list(value, default=None):
+    if value is None:
+        return list(default or [])
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(',') if item.strip()]
+    raise ImproperlyConfigured('ALLOWED_HOSTS must be a list or comma-separated string.')
+
+
+CONFIG = _load_yaml_config()
+
+# Shared password required to view the site
+SITE_PASSWORD = os.environ.get('SITE_PASSWORD', CONFIG.get('SITE_PASSWORD', 'changeme'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-htd5nc4k8jo^odz#mhla@2-ez8moe0_2o4iwz6fh3zrc+_-3i7'
+SECRET_KEY = os.environ.get('SECRET_KEY', CONFIG.get('SECRET_KEY'))
+if not SECRET_KEY:
+    raise ImproperlyConfigured('Set SECRET_KEY in config.yaml or as an environment variable.')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _as_bool(os.environ.get('DEBUG', CONFIG.get('DEBUG', True)), default=True)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = _as_list(
+    os.environ.get('ALLOWED_HOSTS', CONFIG.get('ALLOWED_HOSTS')),
+    default=['127.0.0.1', 'localhost'],
+)
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_ckeditor_5',
+    'adminsortable2',
     'sitecontent',
 ]
 
@@ -67,6 +115,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'sitecontent.context_processors.site_content',
             ],
         },
     },
@@ -122,3 +171,56 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Jazzmin (Admin-Theme)
+# https://django-jazzmin.readthedocs.io/
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'V & M Hochzeit',
+    'site_header': 'V & M Hochzeit',
+    'site_brand': 'V & M Hochzeit',
+    'welcome_sign': 'Willkommen im Verwaltungsbereich eurer Hochzeitswebsite',
+    'copyright': 'V & M',
+    'show_sidebar': True,
+    'navigation_expanded': True,
+    'language_chooser': False,
+    'custom_css': 'css/admin_overrides.css',
+    'icons': {
+        'auth.user': 'fas fa-user',
+        'auth.Group': 'fas fa-users',
+        'sitecontent.textblock': 'fas fa-align-left',
+        'sitecontent.siteimage': 'fas fa-image',
+        'sitecontent.giftssection': 'fas fa-gift',
+        'sitecontent.locationcard': 'fas fa-map-marker-alt',
+        'sitecontent.timelinestep': 'fas fa-clock',
+        'sitecontent.travelinfocard': 'fas fa-plane',
+        'sitecontent.hotelrecommendation': 'fas fa-hotel',
+        'sitecontent.faqitem': 'fas fa-question-circle',
+        'sitecontent.storyitem': 'fas fa-heart',
+        'sitecontent.contactperson': 'fas fa-address-book',
+        'sitecontent.rsvpsubmission': 'fas fa-envelope-open-text',
+    },
+    'default_icon_parents': 'fas fa-chevron-circle-right',
+    'default_icon_children': 'fas fa-circle',
+}
+
+JAZZMIN_UI_TWEAKS = {
+    'theme': 'flatly',
+}
+
+
+# django-ckeditor-5 (WYSIWYG-Editor im Admin)
+# https://django-ckeditor-5.readthedocs.io/
+
+CKEDITOR_5_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+    },
+}
