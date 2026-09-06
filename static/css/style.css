@@ -1,8 +1,8 @@
 /* ==========================================================
    HOCHZEITSSEITE — style.css
 
-   FARBPALETTE:
-     Ivory (#FFFFF0), Soft Gold (#C5A55A), Charcoal (#333333)
+   FARBPALETTE (angelehnt an die Hochzeitskarte):
+     Sage Green (#9CAA87), Cream (#F6F1E4), Antique Gold (#AD8A45), Charcoal (#35332B)
 
    SCHRIFTEN:
      Cormorant Garamond (Überschriften) — elegant, dünn, luxuriös
@@ -18,14 +18,20 @@
    Alle Farben und Schriften an einem Ort.
    Ändert z.B. --color-gold und die ganze Seite passt sich an. */
 :root {
-  --color-ivory:          #FFFFF0;
-  --color-gold:           #C5A55A;
-  --color-gold-light:     #D4B96E;
-  --color-gold-dark:      #8A6D2F;   /* Kontraststarke Gold-Variante fuer helle Hintergruende (Nav-Hover) */
-  --color-charcoal:       #333333;
-  --color-charcoal-light: #555555;
+  --color-ivory:          #F6F1E4;
+  --color-cream:          var(--color-ivory);
+  --color-sage:           #9CAA87;   /* Haupt-Salbeigrün von der Hochzeitskarte */
+  --color-sage-light:     #C3CDAE;
+  --color-sage-dark:      #59684A;   /* Mittleres Salbeigrün fuer Hero-Overlay */
+  --color-sage-deep:      #34362A;   /* Dunkler, gedeckter Ton (nur ein Hauch Salbeigrün) fuer Footer & dunkle Akzent-Sections */
+  --color-gold:           #AD8A45;
+  --color-gold-light:     #C7A868;
+  --color-gold-pale:      #E7C77F;   /* Helleres Gold fuer Text auf dunklem Hintergrund */
+  --color-gold-dark:      #8A6B2F;   /* Kontraststarke Gold-Variante fuer helle Hintergruende (Nav-Hover) */
+  --color-charcoal:       #35332B;
+  --color-charcoal-light: #5C5848;
   --color-white:          #FFFFFF;
-  --color-bg-alt:         #FAF8F5;   /* Leicht abgetönter Hintergrund für abwechselnde Sections */
+  --color-bg-alt:         #EDECDC;   /* Dezenter Salbeigrün-Hauch für abwechselnde Sections */
 
   --font-heading: 'Cormorant Garamond', Georgia, serif;
   --font-body:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;
@@ -131,6 +137,37 @@ a:hover {
 }
 
 
+/* ---- DUNKLE AKZENT-SECTIONS ----
+   Bewusster Kontrastpunkt in der sonst hellen Seite: eine dunkle,
+   satte Salbeigrün-Section (gleicher Ton wie der Footer), z.B. für
+   "Tagesablauf" und "Kontakt". Wird per Zusatzklasse ".section-dark"
+   auf einzelne <section>-Elemente angewendet; die Regeln unten
+   überschreiben Titel-, Text- und Akzentfarben für alles darin. */
+.section.section-dark {
+  background-color: var(--color-sage-deep);
+  color: rgba(246, 241, 228, 0.85);
+}
+
+.section-dark .section-title {
+  background: linear-gradient(
+    90deg,
+    var(--color-ivory) 0%,
+    var(--color-ivory) 40%,
+    var(--color-gold-pale) 50%,
+    var(--color-ivory) 60%,
+    var(--color-ivory) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-dark .section-subtitle {
+  color: rgba(246, 241, 228, 0.65);
+}
+
+
 /* ==========================================================
    NAVIGATION
 
@@ -154,7 +191,7 @@ a:hover {
 }
 
 .navbar.scrolled {
-  background-color: rgba(255, 255, 240, 0.97);
+  background-color: rgba(246, 241, 228, 0.97);
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -403,7 +440,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(255, 255, 240, 0.98);
+  background-color: rgba(246, 241, 228, 0.98);
   display: flex;
   flex-direction: column;      /* Vertikal gestapelt auf Mobil */
   justify-content: center;
@@ -839,6 +876,14 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.location-icon-img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  margin: 0 auto 1rem;
+}
+
 .location-card h3 {
   font-family: var(--font-heading);
   font-size: 1.4rem;
@@ -877,59 +922,103 @@ a:hover {
 
 
 /* ==========================================================
-   TAGESABLAUF — Vertikale Timeline
+   TAGESABLAUF — Timeline mit abwechselnd links/rechts stehendem
+   Icon-Bild (analog zur "Unsere Geschichte"-Sektion)
 
-   LAYOUT: Relative Positionierung
-   - .timeline hat eine vertikale Linie (::before Pseudo-Element)
-   - .timeline-dot ist der goldene Punkt auf der Linie
-   - .timeline-item wird mit padding-left eingerückt
+   LAYOUT: Flexbox
+   - Mobil: Bild oben, Text darunter, zentriert
+   - Ab 768px: Bild und Text nebeneinander, ".timeline-item--reverse"
+     spiegelt die Reihenfolge fuer den Zick-Zack-Effekt
+   - Duenne Verbindungslinie zwischen den Programmpunkten (::after)
    ========================================================== */
 .timeline-section {
   background-color: var(--color-bg-alt);
 }
 
 .timeline {
-  position: relative;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
-  padding-left: 2.5rem;        /* Platz für die Linie links */
-}
-
-/* Vertikale goldene Linie */
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 0.6rem;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: var(--color-gold);
 }
 
 .timeline-item {
   position: relative;
-  margin-bottom: 2.5rem;
-  padding-left: 1rem;
+  text-align: center;
+  padding-bottom: 3rem;
 }
 
-/* Goldener Punkt auf der Linie */
-.timeline-dot {
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Dünne Verbindungslinie zum naechsten Programmpunkt */
+.timeline-item:not(:last-child)::after {
+  content: '';
   position: absolute;
-  left: -2.15rem;
-  top: 0.3rem;
-  width: 12px;
-  height: 12px;
+  left: 50%;
+  bottom: 0.75rem;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 1.75rem;
   background-color: var(--color-gold);
-  border-radius: 50%;
-  border: 2px solid var(--color-bg-alt);
+  opacity: 0.6;
+}
+
+/* .timeline-row umschliesst nur Icon + Text (ohne das Abstands-Padding
+   des Items) — dadurch bezieht sich die vertikale Zentrierung des
+   Icons unten exakt auf die Höhe des Textblocks, nicht auf den
+   zusätzlichen Platz für die Verbindungslinie. */
+.timeline-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.timeline-icon-wrap {
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.timeline-icon {
+  width: 96px;
+  height: 96px;
+  color: var(--color-gold);
+  opacity: 0.85;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.timeline-icon .fw-dot {
+  fill: currentColor;
+  stroke: none;
+}
+
+.timeline-content {
+  max-width: 320px;
 }
 
 .timeline-time {
+  display: block;
   font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-style: italic;
   color: var(--color-gold);
-  margin-bottom: 0.2rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.3rem;
 }
 
 .timeline-content h3 {
@@ -940,8 +1029,29 @@ a:hover {
 }
 
 .timeline-content p {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-style: italic;
   color: var(--color-charcoal-light);
+}
+
+/* Angepasste Timeline-Farben innerhalb einer dunklen Section (siehe
+   ".section-dark" weiter oben) — Text braucht helle statt dunkle
+   Farbtöne, Linie & Icons wechseln auf das helle Pastellgold. */
+.section-dark .timeline-item:not(:last-child)::after {
+  background-color: var(--color-gold-pale);
+}
+
+.section-dark .timeline-time,
+.section-dark .timeline-icon {
+  color: var(--color-gold-pale);
+}
+
+.section-dark .timeline-content h3 {
+  color: var(--color-ivory);
+}
+
+.section-dark .timeline-content p {
+  color: rgba(246, 241, 228, 0.7);
 }
 
 
@@ -967,6 +1077,14 @@ a:hover {
 .travel-icon {
   font-size: 2rem;
   margin-bottom: 1rem;
+}
+
+.travel-icon-img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  margin: 0 0 1rem;
 }
 
 .travel-card h3 {
@@ -1200,8 +1318,8 @@ a:hover {
 }
 
 .contact-avatar {
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 1.2rem;
@@ -1218,6 +1336,7 @@ a:hover {
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 600;
+  color: var(--color-charcoal);
   margin-bottom: 0.2rem;
 }
 
@@ -1243,8 +1362,8 @@ a:hover {
 .footer {
   text-align: center;
   padding: 3rem 1rem;
-  background-color: var(--color-charcoal);
-  color: rgba(255, 255, 255, 0.7);
+  background-color: var(--color-sage-deep);
+  color: rgba(246, 241, 228, 0.85);
   font-size: 0.9rem;
 }
 
@@ -1265,14 +1384,14 @@ a:hover {
 }
 
 .footer-links a {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(246, 241, 228, 0.75);
   font-size: 0.85rem;
   letter-spacing: 0.05em;
   transition: color 200ms var(--ease-out);
 }
 
 .footer-links a:hover {
-  color: var(--color-gold-light);
+  color: var(--color-gold-pale);
 }
 
 .footer-note {
@@ -1332,6 +1451,33 @@ a:hover {
 
   .story-image img {
     height: 350px;
+  }
+
+  /* Tagesablauf: Der Text bleibt exakt mittig auf der Seite (fixe
+     Breite, zentriert) — mit oder ohne Icon identisch positioniert.
+     Das Icon wird aus dem Textfluss genommen und frei daneben
+     platziert (links oder rechts, abwechselnd), statt das Textpaar
+     gemeinsam zu zentrieren. */
+  .timeline-row {
+    display: block;
+    position: relative;
+  }
+
+  .timeline-content {
+    width: 320px;
+    margin: 0 auto;
+  }
+
+  .timeline-icon-wrap {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 160px + 1.25rem);
+    transform: translateY(-50%);
+  }
+
+  .timeline-item--reverse .timeline-icon-wrap {
+    left: auto;
+    right: calc(50% + 160px + 1.25rem);
   }
 
   /* RSVP Radio-Buttons nebeneinander */
@@ -1447,11 +1593,6 @@ a:hover {
   50%       { transform: translateY(-8px); }
 }
 
-@keyframes pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.6); }
-  50%       { box-shadow: 0 0 0 8px rgba(197, 165, 90, 0); }
-}
-
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
@@ -1480,11 +1621,6 @@ a:hover {
 /* Schwebende Herz-Icon im Geschenke-Bereich */
 .gifts-icon {
   animation: float 3s ease-in-out infinite;
-}
-
-/* Pulsende Timeline-Punkte */
-.timeline-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
 }
 
 /* ---- Scroll-Animationen ---- */

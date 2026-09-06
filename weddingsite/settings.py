@@ -173,6 +173,20 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Haengt bei jedem "collectstatic" einen Content-Hash an den Dateinamen
+# (z.B. style.a1b2c3d4.css). So bekommt jede geaenderte CSS/JS-Datei eine
+# neue URL, und der 30-Tage-"immutable"-Cache der Static-Files in nginx
+# (siehe deploy/nginx.conf) liefert Besuchern nie mehr eine veraltete
+# Version aus, ohne dass die lange Cache-Dauer aufgegeben werden muss.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage',
+    },
+}
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

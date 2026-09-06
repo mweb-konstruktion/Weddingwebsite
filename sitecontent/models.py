@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django_ckeditor_5.fields import CKEditor5Field
 
@@ -56,7 +57,15 @@ class GiftsSection(models.Model):
 
 class LocationCard(models.Model):
     order = models.PositiveIntegerField(default=0)
-    icon = models.CharField(max_length=10, blank=True, help_text="Emoji/Symbol, z.B. ⛪")
+    icon = models.CharField(max_length=10, blank=True, help_text="Emoji/Symbol, z.B. ⛪ (Fallback, falls kein Icon-Bild hochgeladen ist)")
+    icon_image = models.FileField(
+        upload_to='location_icons/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'svg'])],
+        verbose_name="Icon-Bild (PNG, JPEG oder SVG)",
+        help_text="Optional — ersetzt das Emoji-Icon.",
+    )
     title_de = models.CharField(max_length=200, verbose_name="Titel (Deutsch)")
     title_it = models.CharField(max_length=200, verbose_name="Titel (Italienisch)")
     name = models.CharField(max_length=200, help_text="Name des Ortes (nicht übersetzt).")
@@ -88,6 +97,14 @@ class TimelineStep(models.Model):
     title_it = models.CharField(max_length=200, verbose_name="Titel (Italienisch)")
     description_de = models.CharField(max_length=255, blank=True, verbose_name="Beschreibung (Deutsch)")
     description_it = models.CharField(max_length=255, blank=True, verbose_name="Beschreibung (Italienisch)")
+    icon_image = models.FileField(
+        upload_to='timeline_icons/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'svg'])],
+        verbose_name="Icon-Bild (PNG, JPEG oder SVG)",
+        help_text="Optional — ohne Upload wird ein Standard-Icon angezeigt.",
+    )
 
     class Meta:
         ordering = ['order']
@@ -100,7 +117,15 @@ class TimelineStep(models.Model):
 
 class TravelInfoCard(models.Model):
     order = models.PositiveIntegerField(default=0)
-    icon = models.CharField(max_length=10, blank=True, help_text="Emoji/Symbol, z.B. ✈")
+    icon = models.CharField(max_length=10, blank=True, help_text="Emoji/Symbol, z.B. ✈ (Fallback, falls kein Icon-Bild hochgeladen ist)")
+    icon_image = models.FileField(
+        upload_to='travel_icons/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'svg'])],
+        verbose_name="Icon-Bild (PNG, JPEG oder SVG)",
+        help_text="Optional — ersetzt das Emoji-Icon.",
+    )
     title_de = models.CharField(max_length=200, verbose_name="Titel (Deutsch)")
     title_it = models.CharField(max_length=200, verbose_name="Titel (Italienisch)")
     body_de = CKEditor5Field(verbose_name="Text (Deutsch)", config_name='default')

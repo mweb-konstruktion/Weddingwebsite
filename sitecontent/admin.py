@@ -84,17 +84,18 @@ class GiftsSectionAdmin(SingletonAdminMixin, admin.ModelAdmin):
 class LocationCardAdmin(SortableAdminMixin, ThumbnailAdminMixin, admin.ModelAdmin):
     list_display = ('name', 'thumbnail')
     fieldsets = (
-        (None, {'fields': ('icon', 'name', 'address', 'map_embed_url', 'image')}),
+        (None, {'fields': ('icon', 'icon_image', 'name', 'address', 'map_embed_url', 'image')}),
         ('Deutsch', {'fields': ('title_de', 'description_de')}),
         ('Italiano', {'fields': ('title_it', 'description_it')}),
     )
 
 
 @admin.register(TimelineStep)
-class TimelineStepAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('time', 'title_de')
+class TimelineStepAdmin(SortableAdminMixin, ThumbnailAdminMixin, admin.ModelAdmin):
+    image_field = 'icon_image'
+    list_display = ('time', 'title_de', 'thumbnail')
     fieldsets = (
-        (None, {'fields': ('time',)}),
+        (None, {'fields': ('time', 'icon_image')}),
         ('Deutsch', {'fields': ('title_de', 'description_de')}),
         ('Italiano', {'fields': ('title_it', 'description_it')}),
     )
@@ -104,7 +105,7 @@ class TimelineStepAdmin(SortableAdminMixin, admin.ModelAdmin):
 class TravelInfoCardAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('title_de',)
     fieldsets = (
-        (None, {'fields': ('icon',)}),
+        (None, {'fields': ('icon', 'icon_image')}),
         ('Deutsch', {'fields': ('title_de', 'body_de')}),
         ('Italiano', {'fields': ('title_it', 'body_it')}),
     )
