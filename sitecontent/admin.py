@@ -166,6 +166,8 @@ class RSVPGuestInline(admin.TabularInline):
     model = RSVPGuest
     extra = 0
     can_delete = False
+    fields = ('name', 'is_child', 'age', 'meal', 'allergies')
+    readonly_fields = ('name', 'is_child', 'age', 'meal', 'allergies')
 
     def has_add_permission(self, request, obj=None):
         return False
@@ -173,7 +175,7 @@ class RSVPGuestInline(admin.TabularInline):
 
 @admin.register(RSVPSubmission)
 class RSVPSubmissionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'no_of_guests', 'submitted_at')
+    list_display = ('name', 'email', 'no_of_guests', 'no_of_children', 'submitted_at')
     list_filter = ('submitted_at',)
     search_fields = ('name', 'email')
     readonly_fields = ('submitted_at',)

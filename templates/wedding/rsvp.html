@@ -50,7 +50,11 @@
         <form class="rsvp-form" id="rsvp-form" method="post" novalidate>
           {% csrf_token %}
           <div class="form-group">
-              <label for="{{ form.name.id_for_label }}">{{ form.name.label }}{% if form.name.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              <label for="{{ form.name.id_for_label }}">
+                <span class="lang-de">Anmeldende Person</span>
+                <span class="lang-it">Persona che si iscrive</span>
+                <span class="required-star">*</span>
+              </label>
               {{ form.name }}
             {% if form.name.errors %}
               <span class="field-error" style="display:block;">{{ form.name.errors|join:', ' }}</span>
@@ -58,7 +62,11 @@
           </div>
 
           <div class="form-group">
-              <label for="{{ form.email.id_for_label }}">{{ form.email.label }}{% if form.email.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              <label for="{{ form.email.id_for_label }}">
+                <span class="lang-de">E-Mail</span>
+                <span class="lang-it">E-mail</span>
+                <span class="required-star">*</span>
+              </label>
               {{ form.email }}
             {% if form.email.errors %}
               <span class="field-error" style="display:block;">{{ form.email.errors|join:', ' }}</span>
@@ -66,20 +74,41 @@
           </div>
 
           <div class="form-group">
-              <label for="{{ form.no_of_guests.id_for_label }}">{{ form.no_of_guests.label }}{% if form.no_of_guests.field.required %}<span class="required-star">*</span>{% endif %}</label>
+              <label for="{{ form.no_of_guests.id_for_label }}">
+                <span class="lang-de">Anzahl der G&auml;ste</span>
+                <span class="lang-it">Numero di ospiti</span>
+                <span class="required-star">*</span>
+              </label>
               {{ form.no_of_guests }}
             {% if form.no_of_guests.errors %}
               <span class="field-error" style="display:block;">{{ form.no_of_guests.errors|join:', ' }}</span>
             {% endif %}
           </div>
 
+          <div class="form-group">
+              <label for="{{ form.no_of_children.id_for_label }}">
+                <span class="lang-de">Anzahl Kinder</span>
+                <span class="lang-it">Numero di bambini</span>
+              </label>
+              {{ form.no_of_children }}
+            {% if form.no_of_children.errors %}
+              <span class="field-error" style="display:block;">{{ form.no_of_children.errors|join:', ' }}</span>
+            {% endif %}
+          </div>
+
           <div id="guest-fields">
             {% for guest in form.guest_rows %}
             <div class="guest-block" data-guest-index="{{ guest.index }}">
-              <h3 class="guest-block-title">Gast {{ guest.index }}</h3>
+              <h3 class="guest-block-title">
+                <span class="lang-de">Gast {{ guest.index }}</span>
+                <span class="lang-it">Ospite {{ guest.index }}</span>
+              </h3>
 
               <div class="form-group">
-                <label for="{{ guest.name.id_for_label }}">{{ guest.name.label }}</label>
+                <label for="{{ guest.name.id_for_label }}">
+                  <span class="lang-de">Name</span>
+                  <span class="lang-it">Nome</span>
+                </label>
                 {{ guest.name }}
                 {% if guest.name.errors %}
                   <span class="field-error" style="display:block;">{{ guest.name.errors|join:', ' }}</span>
@@ -87,7 +116,10 @@
               </div>
 
               <div class="form-group">
-                <label for="{{ guest.meal.id_for_label }}">{{ guest.meal.label }}</label>
+                <label for="{{ guest.meal.id_for_label }}">
+                  <span class="lang-de">Men&uuml;wahl</span>
+                  <span class="lang-it">Scelta del men&ugrave;</span>
+                </label>
                 {{ guest.meal }}
                 {% if guest.meal.errors %}
                   <span class="field-error" style="display:block;">{{ guest.meal.errors|join:', ' }}</span>
@@ -95,7 +127,10 @@
               </div>
 
               <div class="form-group">
-                <label for="{{ guest.allergies.id_for_label }}">{{ guest.allergies.label }}</label>
+                <label for="{{ guest.allergies.id_for_label }}">
+                  <span class="lang-de">Allergien / Unvertr&auml;glichkeiten</span>
+                  <span class="lang-it">Allergie / intolleranze</span>
+                </label>
                 {{ guest.allergies }}
                 {% if guest.allergies.errors %}
                   <span class="field-error" style="display:block;">{{ guest.allergies.errors|join:', ' }}</span>
@@ -105,8 +140,66 @@
             {% endfor %}
           </div>
 
+          <div id="child-fields">
+            {% for child in form.child_rows %}
+            <div class="guest-block child-block" data-child-index="{{ child.index }}">
+              <h3 class="guest-block-title child-block-title">
+                <span class="lang-de">Kind {{ child.index }}</span>
+                <span class="lang-it">Bambino {{ child.index }}</span>
+              </h3>
+
+              <div class="form-group">
+                <label for="{{ child.name.id_for_label }}">
+                  <span class="lang-de">Name</span>
+                  <span class="lang-it">Nome</span>
+                </label>
+                {{ child.name }}
+                {% if child.name.errors %}
+                  <span class="field-error" style="display:block;">{{ child.name.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ child.age.id_for_label }}">
+                  <span class="lang-de">Alter</span>
+                  <span class="lang-it">Et&agrave;</span>
+                </label>
+                {{ child.age }}
+                {% if child.age.errors %}
+                  <span class="field-error" style="display:block;">{{ child.age.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ child.meal.id_for_label }}">
+                  <span class="lang-de">Men&uuml; f&uuml;r Kinder</span>
+                  <span class="lang-it">Men&ugrave; per bambini</span>
+                </label>
+                {{ child.meal }}
+                {% if child.meal.errors %}
+                  <span class="field-error" style="display:block;">{{ child.meal.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="{{ child.allergies.id_for_label }}">
+                  <span class="lang-de">Allergien / Unvertr&auml;glichkeiten</span>
+                  <span class="lang-it">Allergie / intolleranze</span>
+                </label>
+                {{ child.allergies }}
+                {% if child.allergies.errors %}
+                  <span class="field-error" style="display:block;">{{ child.allergies.errors|join:', ' }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
           <div class="form-group">
-              <label for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+              <label for="{{ form.message.id_for_label }}">
+                <span class="lang-de">Nachricht</span>
+                <span class="lang-it">Messaggio</span>
+              </label>
               {{ form.message }}
             {% if form.message.errors %}
               <span class="field-error" style="display:block;">{{ form.message.errors|join:', ' }}</span>
@@ -175,6 +268,37 @@
       if (guestCountSelect && guestBlocks.length) {
         guestCountSelect.addEventListener('change', updateGuestFields);
         updateGuestFields();
+      }
+    })();
+
+    // ---- KINDER-FELDER: passend zur gewählten Anzahl ein-/ausblenden ----
+    (function () {
+      var childCountSelect = document.getElementById('id_no_of_children');
+      var childBlocks = document.querySelectorAll('#child-fields .child-block');
+
+      function clearChildBlock(block) {
+        block.querySelectorAll('input, select, textarea').forEach(function (field) {
+          field.value = '';
+        });
+      }
+
+      function updateChildFields() {
+        var count = parseInt(childCountSelect.value, 10) || 0;
+
+        childBlocks.forEach(function (block) {
+          var index = parseInt(block.dataset.childIndex, 10);
+          if (index <= count) {
+            block.style.display = '';
+          } else {
+            block.style.display = 'none';
+            clearChildBlock(block);
+          }
+        });
+      }
+
+      if (childCountSelect && childBlocks.length) {
+        childCountSelect.addEventListener('change', updateChildFields);
+        updateChildFields();
       }
     })();
 

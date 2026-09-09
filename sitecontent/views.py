@@ -16,13 +16,15 @@ def rsvp(request):
         form = RSVPForm(request.POST)
         if form.is_valid():
             no_of_guests = int(form.cleaned_data['no_of_guests'])
+            no_of_children = int(form.cleaned_data.get('no_of_children') or 0)
             submission = RSVPSubmission.objects.create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
                 no_of_guests=no_of_guests,
+                no_of_children=no_of_children,
                 message=form.cleaned_data['message'],
             )
-            RSVPGuest.objects.bulk_create([
+            guests = [
                 RSVPGuest(
                     submission=submission,
                     name=form.cleaned_data[f'guest_name_{i}'],
@@ -30,7 +32,19 @@ def rsvp(request):
                     allergies=form.cleaned_data[f'guest_allergies_{i}'],
                 )
                 for i in range(1, no_of_guests + 1)
-            ])
+            ]
+            guests += [
+                RSVPGuest(
+                    submission=submission,
+                    name=form.cleaned_data[f'child_name_{i}'],
+                    is_child=True,
+                    age=form.cleaned_data[f'child_age_{i}'],
+                    meal=form.cleaned_data[f'child_meal_{i}'],
+                    allergies=form.cleaned_data[f'child_allergies_{i}'],
+                )
+                for i in range(1, no_of_children + 1)
+            ]
+            RSVPGuest.objects.bulk_create(guests)
             submitted = True
             form = RSVPForm()
     else:

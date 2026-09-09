@@ -33,6 +33,12 @@ function setLanguage(lang) {
     el.placeholder = el.getAttribute('data-placeholder-' + lang);
   });
 
+  // 3b. Leere Auswahl-Option in <select> aktualisieren (z.B. "Bitte wählen")
+  document.querySelectorAll('select[data-empty-' + lang + ']').forEach(sel => {
+    const emptyOption = sel.querySelector('option[value=""]');
+    if (emptyOption) emptyOption.textContent = sel.getAttribute('data-empty-' + lang);
+  });
+
   // 4. In localStorage speichern
   localStorage.setItem('wedding-lang', lang);
 }

@@ -215,6 +215,7 @@ class RSVPSubmission(models.Model):
     name = models.CharField(max_length=120, verbose_name="Anmeldende Person")
     email = models.EmailField(verbose_name="E-Mail")
     no_of_guests = models.PositiveSmallIntegerField(verbose_name="Anzahl Gäste")
+    no_of_children = models.PositiveSmallIntegerField(default=0, verbose_name="Anzahl Kinder")
     message = models.TextField(blank=True, verbose_name="Nachricht")
     submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Eingegangen am")
 
@@ -224,20 +225,26 @@ class RSVPSubmission(models.Model):
         verbose_name_plural = "Anmeldungen"
 
     def __str__(self):
-        return f"{self.name} ({self.no_of_guests} Gäste)"
+        return f"{self.name} ({self.no_of_guests} Gäste, {self.no_of_children} Kinder)"
 
 
 class RSVPGuest(models.Model):
-    """Ein einzelner Gast innerhalb einer Anmeldung."""
+    """Ein einzelner Gast innerhalb einer Anmeldung.
+
+    Kinder werden im selben Modell abgelegt und über ``is_child`` markiert.
+    """
 
     submission = models.ForeignKey(RSVPSubmission, related_name='guests', on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
+    is_child = models.BooleanField(default=False, verbose_name="Kind")
+    age = models.CharField(max_length=20, blank=True, verbose_name="Alter")
     meal = models.CharField(max_length=50, blank=True, verbose_name="Menüwahl")
     allergies = models.CharField(max_length=255, blank=True, verbose_name="Allergien / Unverträglichkeiten")
 
     class Meta:
+        ordering = ['is_child', 'id']
         verbose_name = "Gast"
         verbose_name_plural = "Gäste"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (Kind)" if self.is_child else self.name
