@@ -1,10 +1,12 @@
 /* ==========================================================
    HOCHZEITSSEITE — style.css
 
-   FARBPALETTE (angelehnt an die Hochzeitskarte):
-     Sage Green (#9CAA87), Cream (#F6F1E4), Antique Gold (#AD8A45), Charcoal (#35332B)
+   FARBPALETTE (Mintgrün-Optik):
+     Mint Green (#ABCFB3, RAL Design 150 80 20), Cream (#F6F1E4),
+     Antique Gold (#AD8A45), Charcoal (#35332B)
 
    SCHRIFTEN:
+     Imperial Script (Namen im Hero) — geschwungene Zierschrift
      Cormorant Garamond (Überschriften) — elegant, dünn, luxuriös
      Montserrat (Fliesstext) — modern, gut lesbar
 
@@ -20,10 +22,11 @@
 :root {
   --color-ivory:          #F6F1E4;
   --color-cream:          var(--color-ivory);
-  --color-sage:           #9CAA87;   /* Haupt-Salbeigrün von der Hochzeitskarte */
-  --color-sage-light:     #C3CDAE;
-  --color-sage-dark:      #59684A;   /* Mittleres Salbeigrün fuer Hero-Overlay */
-  --color-sage-deep:      #34362A;   /* Dunkler, gedeckter Ton (nur ein Hauch Salbeigrün) fuer Footer & dunkle Akzent-Sections */
+
+  /* ---- Mintgrün (RAL Design 150 80 20) ---- */
+  --color-mint:           #D1D6C3;   /* Haupt-Mintgrün  */
+  --color-mint-soft:      #D1D6C3;   /* Sehr helles Mint fuer den Seitenhintergrund */
+  --color-mint-deep:      #969d82;   /* Gedecktes Mintgruen fuer Footer & Akzent-Sections (ersetzt das dunkle Gruen) */
   --color-gold:           #AD8A45;
   --color-gold-light:     #C7A868;
   --color-gold-pale:      #E7C77F;   /* Helleres Gold fuer Text auf dunklem Hintergrund */
@@ -31,9 +34,10 @@
   --color-charcoal:       #35332B;
   --color-charcoal-light: #5C5848;
   --color-white:          #FFFFFF;
-  --color-bg-alt:         #EDECDC;   /* Dezenter Salbeigrün-Hauch für abwechselnde Sections */
+  --color-bg-alt:         #e1e7d3;   /* Zarter Mint-Ton fuer abwechselnde Sections */
 
   --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-script:  'Monsieur La Doulaise', 'Cormorant Garamond', cursive;
   --font-body:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;
 
   --max-width: 1100px;
@@ -83,7 +87,7 @@ body {
   font-family: var(--font-body);
   font-weight: 300;
   color: var(--color-charcoal);
-  background-color: var(--color-ivory);
+  background-color: var(--color-mint-soft);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
@@ -144,7 +148,7 @@ a:hover {
    auf einzelne <section>-Elemente angewendet; die Regeln unten
    überschreiben Titel-, Text- und Akzentfarben für alles darin. */
 .section.section-dark {
-  background-color: var(--color-sage-deep);
+  background-color: var(--color-mint-deep);
   color: rgba(246, 241, 228, 0.85);
 }
 
@@ -196,11 +200,12 @@ a:hover {
 }
 
 .nav-brand a {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: var(--font-script);
+  font-size: 1.3rem;
+  font-weight: 400;
   color: var(--color-white);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   transition: color 0.3s ease;
 }
 
@@ -548,11 +553,11 @@ a:hover {
 }
 
 .hero-title {
-  font-family: var(--font-heading);
+  font-family: var(--font-script);
   font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
   margin-bottom: 0.5rem;
 }
 
@@ -884,6 +889,15 @@ a:hover {
   margin: 0 auto 1rem;
 }
 
+/* Inline-SVG-Icons (Lucide): erben die Akzentfarbe ueber currentColor */
+.location-icon-svg {
+  display: block;
+  width: 48px;
+  height: 48px;
+  color: var(--color-gold);
+  margin: 0 auto 1rem;
+}
+
 .location-card h3 {
   font-family: var(--font-heading);
   font-size: 1.4rem;
@@ -1084,6 +1098,15 @@ a:hover {
   width: 56px;
   height: 56px;
   object-fit: contain;
+  margin: 0 0 1rem;
+}
+
+/* Inline-SVG-Icons (Lucide): erben die Akzentfarbe ueber currentColor */
+.travel-icon-svg {
+  display: block;
+  width: 48px;
+  height: 48px;
+  color: var(--color-gold);
   margin: 0 0 1rem;
 }
 
@@ -1362,7 +1385,7 @@ a:hover {
 .footer {
   text-align: center;
   padding: 3rem 1rem;
-  background-color: var(--color-sage-deep);
+  background-color: var(--color-mint-deep);
   color: rgba(246, 241, 228, 0.85);
   font-size: 0.9rem;
 }
@@ -1421,6 +1444,10 @@ a:hover {
 
   .hero-date {
     font-size: 1.2rem;
+  }
+
+  .nav-brand a {
+    font-size: 2.2rem;
   }
 
   .countdown-number {

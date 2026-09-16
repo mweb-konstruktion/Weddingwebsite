@@ -19,3 +19,10 @@ bash deploy.sh
 Das Script überträgt alle Dateien per `scp` auf den Server, führt Migrationen durch, sammelt Static Files und startet Gunicorn neu.
 
 ---
+Seite starten: 
+venv\Scripts\activate
+python manage.py runserver
+
+git add .
+git commit -m "message"
+git push
