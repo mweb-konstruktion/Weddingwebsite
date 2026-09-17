@@ -24,8 +24,8 @@
   --color-cream:          var(--color-ivory);
 
   /* ---- Mintgrün (RAL Design 150 80 20) ---- */
-  --color-mint:           #D1D6C3;   /* Haupt-Mintgrün  */
-  --color-mint-soft:      #D1D6C3;   /* Sehr helles Mint fuer den Seitenhintergrund */
+  --color-mint:           #faf2d3;   /* Haupt-Mintgrün  */
+  --color-mint-soft:      #f6f0d8;   /* Sehr helles Mint fuer den Seitenhintergrund */
   --color-mint-deep:      #969d82;   /* Gedecktes Mintgruen fuer Footer & Akzent-Sections (ersetzt das dunkle Gruen) */
   --color-gold:           #AD8A45;
   --color-gold-light:     #C7A868;
@@ -34,7 +34,7 @@
   --color-charcoal:       #35332B;
   --color-charcoal-light: #5C5848;
   --color-white:          #FFFFFF;
-  --color-bg-alt:         #e1e7d3;   /* Zarter Mint-Ton fuer abwechselnde Sections */
+  --color-bg-alt:         #fefae8;   /* Zarter Mint-Ton fuer abwechselnde Sections */
 
   --font-heading: 'Cormorant Garamond', Georgia, serif;
   --font-script:  'Monsieur La Doulaise', 'Cormorant Garamond', cursive;
@@ -535,6 +535,18 @@ a:hover {
     rgba(0, 0, 0, 0.35),
     rgba(0, 0, 0, 0.55)
   );
+}
+
+/* Feuerwerk-Canvas: liegt ueber dem Overlay, wird per JS erst sichtbar
+   (display:block), sobald der Hochzeitstag erreicht ist. */
+.fireworks-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: none;
+  pointer-events: none;
 }
 
 .hero-content {
