@@ -148,9 +148,9 @@ FAQ_ITEMS = [
          answer_it='Villa Carafa dispone di aree coperte — la festa si svolgerà con qualsiasi '
                     'tempo. A luglio la pioggia in Puglia è comunque molto rara!'),
     dict(order=6, question_de='Bis wann muss ich Zusage/Absage geben?', question_it='Entro quando devo confermare?',
-         answer_de='Bitte meldet euch bis spätestens <strong>15. Mai 2027</strong> über unser '
+         answer_de='Bitte meldet euch bis spätestens <strong>15. Januar 2027</strong> über unser '
                     '<a href="#rsvp">RSVP-Formular</a> an.',
-         answer_it='Vi preghiamo di rispondere entro il <strong>15 maggio 2027</strong> tramite il nostro '
+         answer_it='Vi preghiamo di rispondere entro il <strong>15 gennaio 2027</strong> tramite il nostro '
                     '<a href="#rsvp">modulo RSVP</a>.'),
 ]
 

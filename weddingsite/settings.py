@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import yaml
+from django.contrib.staticfiles.storage import ManifestStaticFilesStorage
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -173,6 +174,25 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+class LenientManifestStaticFilesStorage(ManifestStaticFilesStorage):
+    """
+    Wie ManifestStaticFilesStorage, aber ohne strikte Manifest-Pruefung.
+
+    Jazzmins eigenes Template (admin/base.html) referenziert bewusst einen
+    nicht existierenden Pfad ({% static 'vendor/bootswatch' %}) als reinen
+    JS-Praefix fuer den Theme-Switcher. Mit manifest_strict=True (Django-
+    Standard) wirft das einen ValueError, sobald DEBUG=False ist (bei
+    DEBUG=True ueberspringt Django die strikte Pruefung, siehe
+    HashedFilesMixin.url) - die komplette Admin-Seite crasht dann mit einem
+    500er. manifest_strict=False laesst Django bei fehlenden Eintraegen
+    einfach auf die ungehashte URL zurueckfallen statt einen Fehler zu
+    werfen; echte, vorhandene Dateien bekommen weiterhin ganz normal ihren
+    Content-Hash im Dateinamen.
+    """
+
+    manifest_strict = False
+
+
 # Haengt bei jedem "collectstatic" einen Content-Hash an den Dateinamen
 # (z.B. style.a1b2c3d4.css). So bekommt jede geaenderte CSS/JS-Datei eine
 # neue URL, und der 30-Tage-"immutable"-Cache der Static-Files in nginx
@@ -183,12 +203,35 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage',
+        'BACKEND': 'weddingsite.settings.LenientManifestStaticFilesStorage',
     },
 }
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Logging
+# Ohne eigene Konfiguration verschickt Django 500er-Fehler nur per E-Mail an
+# ADMINS (nicht konfiguriert) und loggt sie sonst nirgends sichtbar. Damit
+# echte Fehler im Gunicorn-Error-Log auftauchen, werden sie zusaetzlich auf
+# die Konsole (stderr) geschrieben.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 
 # Jazzmin (Admin-Theme)
